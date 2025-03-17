@@ -36,12 +36,14 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.internal.FMLMessage.EntityMessage;
+import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.common.registry.IThrowableEntity;
 import net.minecraftforge.fml.common.registry.EntityRegistry.EntityRegistration;
+import net.minecraftforge.registries.GameData;
 
-public class EntitySpawnHandler extends SimpleChannelInboundHandler<FMLMessage.EntityMessage> {
+public class EntitySpawnHandler extends SimpleChannelInboundHandler<EntityMessage> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, final EntityMessage msg) throws Exception
     {
@@ -70,21 +72,23 @@ public class EntitySpawnHandler extends SimpleChannelInboundHandler<FMLMessage.E
     {
         ModContainer mc = Loader.instance().getIndexedModList().get(spawnMsg.modId);
         EntityRegistration er = EntityRegistry.instance().lookupModSpawn(mc, spawnMsg.modEntityTypeId);
+        EntityEntry ee = null;
         if (er == null)
         {
-            throw new RuntimeException( "Could not spawn mod entity ModID: " + spawnMsg.modId + " EntityID: " + spawnMsg.modEntityTypeId +
-                    " at ( " + spawnMsg.rawX + "," + spawnMsg.rawY + ", " + spawnMsg.rawZ + ") Please contact mod author or server admin.");
+//            throw new RuntimeException( "Could not spawn mod entity ModID: " + spawnMsg.modId + " EntityID: " + spawnMsg.modEntityTypeId +
+//                    " at ( " + spawnMsg.rawX + "," + spawnMsg.rawY + ", " + spawnMsg.rawZ + ") Please contact mod author or server admin.");
+            ee = GameData.getEntityClassMap().values().stream().filter(e -> e.getName().equals("Egg")).findAny().orElseThrow();
         }
         WorldClient wc = FMLClientHandler.instance().getWorldClient();
         try
         {
             Entity entity;
-            if (er.hasCustomSpawning())
+            if (er != null && er.hasCustomSpawning())
             {
                 entity = er.doCustomSpawning(spawnMsg);
             } else
             {
-                entity = er.newInstance(wc);
+                entity = er != null ? er.newInstance(wc) : ee.newInstance(wc);
 
                 int offset = spawnMsg.entityId - entity.getEntityId();
                 entity.setEntityId(spawnMsg.entityId);
@@ -132,7 +136,9 @@ public class EntitySpawnHandler extends SimpleChannelInboundHandler<FMLMessage.E
         }
         catch (Exception e)
         {
-            throw new RuntimeException("A severe problem occurred during the spawning of an entity at (" + spawnMsg.rawX + ", " + spawnMsg.rawY + ", " + spawnMsg.rawZ + ")", e);
+            //throw new RuntimeException("A severe problem occurred during the spawning of an entity at (" + spawnMsg.rawX + ", " + spawnMsg.rawY + ", " + spawnMsg.rawZ + ")", e);
+            Entity entity = er.newInstance(wc);
+            wc.addEntityToWorld(spawnMsg.entityId, entity);
         }
     }
 

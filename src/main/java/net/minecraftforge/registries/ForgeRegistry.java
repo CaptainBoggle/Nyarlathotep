@@ -702,7 +702,8 @@ public class ForgeRegistry<V extends IForgeRegistryEntry<V>> implements IForgeRe
         {
             ResourceLocation itemName = entry.getKey();
             String owner = entry.getValue();
-            String current = this.owners.inverse().get(this.getRaw(itemName)).owner;
+            // String current = this.owners.inverse().get(this.getRaw(itemName)).owner;
+            String current = "minecraft";
             if (!owner.equals(current))
             {
                 V _new = this.owners.get(new OverrideOwner(owner, itemName));
