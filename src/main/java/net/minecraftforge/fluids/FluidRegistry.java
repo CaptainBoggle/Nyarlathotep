@@ -122,8 +122,10 @@ public abstract class FluidRegistry
                 String derivedName = defaultName.split(":",2)[1];
                 String localDefault = defaultFluidName.get(derivedName);
                 if (localDefault == null) {
-                    FMLLog.log.error("The fluid {} (specified as {}) is missing from this instance - it will be removed", derivedName, defaultName);
-                    continue;
+//                    FMLLog.log.error("The fluid {} (specified as {}) is missing from this instance - it will be removed", derivedName, defaultName);
+//                    continue;
+                    // Everything is water!
+                    localDefault = "minecraft:water";
                 }
                 fluid = masterFluidReference.get(localDefault);
                 FMLLog.log.error("The fluid {} specified as default is not present - it will be reverted to default {}", defaultName, localDefault);
@@ -135,7 +137,7 @@ public abstract class FluidRegistry
         }
         BiMap<Integer, String> localFluidNames = HashBiMap.create();
         for (Entry<Fluid, Integer> e : localFluidIDs.entrySet()) {
-            localFluidNames.put(e.getValue(), e.getKey().getName());
+            localFluidNames.put(e.getValue(), e.getKey() != null ? e.getKey().getName() : "water2");
         }
         fluidIDs = localFluidIDs;
         fluids = localFluids;

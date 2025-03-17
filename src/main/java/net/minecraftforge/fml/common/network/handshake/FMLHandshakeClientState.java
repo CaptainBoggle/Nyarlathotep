@@ -204,15 +204,15 @@ enum FMLHandshakeClientState implements IHandshakeState<FMLHandshakeClientState>
             //Do the remapping on the Client's thread in case things are reset while the client is running. We stall the network thread until this is finished which can cause the IO thread to time out... Not sure if we can do anything about that.
             final Map<ResourceLocation, ForgeRegistry.Snapshot> snap_f = snap;
             Multimap<ResourceLocation, ResourceLocation> locallyMissing = Futures.getUnchecked(Minecraft.getMinecraft().addScheduledTask(() -> GameData.injectSnapshot(snap_f, false, false)));
-            if (!locallyMissing.isEmpty())
-            {
-                cons.accept(ERROR);
-                NetworkDispatcher dispatcher = ctx.channel().attr(NetworkDispatcher.FML_DISPATCHER).get();
-                dispatcher.rejectHandshake("Fatally missing registry entries");
-                FMLLog.log.fatal("Failed to connect to server: there are {} missing registry items", locallyMissing.size());
-                locallyMissing.asMap().forEach((key, value) ->  FMLLog.log.debug("Missing {} Entries: {}", key, value));
-                return;
-            }
+//            if (!locallyMissing.isEmpty())
+//            {
+//                cons.accept(ERROR);
+//                NetworkDispatcher dispatcher = ctx.channel().attr(NetworkDispatcher.FML_DISPATCHER).get();
+//                dispatcher.rejectHandshake("Fatally missing registry entries");
+//                FMLLog.log.fatal("Failed to connect to server: there are {} missing registry items", locallyMissing.size());
+//                locallyMissing.asMap().forEach((key, value) ->  FMLLog.log.debug("Missing {} Entries: {}", key, value));
+//                return;
+//            }
             cons.accept(PENDINGCOMPLETE);
             ctx.writeAndFlush(new FMLHandshakeMessage.HandshakeAck(ordinal())).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
         }
