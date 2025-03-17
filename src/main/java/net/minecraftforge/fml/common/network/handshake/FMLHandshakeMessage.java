@@ -118,6 +118,10 @@ public abstract class FMLHandshakeMessage {
         {
 
         }
+        public ModList(Map<String,String> modList)
+        {
+            modTags.putAll(modList);
+        }
         public ModList(List<ModContainer> modList)
         {
             for (ModContainer mod : modList)

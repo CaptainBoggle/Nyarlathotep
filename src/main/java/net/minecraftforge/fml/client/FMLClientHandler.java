@@ -198,7 +198,7 @@ public class FMLClientHandler implements IFMLSidedHandler
     private BiMap<ModContainer, IModGuiFactory> guiFactories;
 
     private Map<ServerStatusResponse,JsonObject> extraServerListData;
-    private Map<ServerData, ExtendedServerListData> serverDataTag;
+    public Map<ServerData, ExtendedServerListData> serverDataTag;
 
     private WeakReference<NetHandlerPlayClient> currentPlayClient;
 
@@ -774,7 +774,8 @@ public class FMLClientHandler implements IFMLSidedHandler
             JsonObject jsonData = extraServerListData.get(originalResponse);
             String type = jsonData.get("type").getAsString();
             JsonArray modDataArray = jsonData.get("modList").getAsJsonArray();
-            boolean moddedClientAllowed = jsonData.has("clientModsAllowed") ? jsonData.get("clientModsAllowed").getAsBoolean() : true;
+            //boolean moddedClientAllowed = jsonData.has("clientModsAllowed") ? jsonData.get("clientModsAllowed").getAsBoolean() : true;
+            boolean moddedClientAllowed = true; // we don't care if the server doesn't want us to have mods
             Builder<String, String> modListBldr = ImmutableMap.builder();
             for (JsonElement obj : modDataArray)
             {
@@ -790,10 +791,11 @@ public class FMLClientHandler implements IFMLSidedHandler
         {
             String serverDescription = data.serverMOTD;
             boolean moddedClientAllowed = true;
-            if (!Strings.isNullOrEmpty(serverDescription))
-            {
-                moddedClientAllowed = !serverDescription.endsWith(":NOFML§r");
-            }
+//            if (!Strings.isNullOrEmpty(serverDescription))
+//            {
+//                moddedClientAllowed = !serverDescription.endsWith(":NOFML§r");
+//            }
+            // again, we don't care if the server doesn't want us to have mods
             serverDataTag.put(data, new ExtendedServerListData("VANILLA", false, ImmutableMap.of(), !moddedClientAllowed));
         }
         startupConnectionData.countDown();

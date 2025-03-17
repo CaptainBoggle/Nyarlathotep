@@ -19,9 +19,12 @@
 
 package net.minecraftforge.fml.common.network.handshake;
 
+import com.google.common.graph.Network;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -30,7 +33,17 @@ import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.Futures;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerAddress;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.network.NetHandlerHandshakeMemory;
+import net.minecraft.client.network.ServerPinger;
+import net.minecraft.network.EnumPacketDirection;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.ServerStatusResponse;
+import net.minecraft.network.status.INetHandlerStatusClient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.ExtendedServerListData;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -40,6 +53,7 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.GameData;
+import org.checkerframework.checker.units.qual.N;
 
 /**
  * Packet handshake sequence manager- client side (responding to remote server)
@@ -69,6 +83,37 @@ enum FMLHandshakeClientState implements IHandshakeState<FMLHandshakeClientState>
         @Override
         public void accept(ChannelHandlerContext ctx, FMLHandshakeMessage msg, Consumer<? super FMLHandshakeClientState> cons)
         {
+            NetworkManager man = ctx.channel().attr(NetworkDispatcher.FML_DISPATCHER).get().manager;
+
+            String rawAddress = man.getRemoteAddress().toString();
+
+            // addressString is in the form hostname/ip:port
+            // if the user is connecting via an ip, the hostname will be empty
+            // we need to get the hostname if it is there, otherwise we will use the ip
+
+
+            String serverIP = rawAddress.startsWith("/") ? rawAddress.substring(1, rawAddress.indexOf(":")) : rawAddress.substring(0, rawAddress.indexOf("/"));
+            FMLHandshakeMessage.ModList epicModList = new FMLHandshakeMessage.ModList(Loader.instance().getActiveModList());
+
+            FMLClientHandler client = FMLClientHandler.instance();
+
+            Map<ServerData, ExtendedServerListData> serverListData = client.serverDataTag;
+
+            // Yes, this falls apart if we have multiple servers with the same IP, but that's a problem for another day
+            for (Map.Entry<ServerData, ExtendedServerListData> entry : serverListData.entrySet())
+            {
+                if (entry.getKey().serverIP.equals(serverIP))
+                {
+                    epicModList = new FMLHandshakeMessage.ModList(entry.getValue().modData);
+                    FMLLog.log.info("Spoofing mod list!");
+                    break;
+                }
+            }
+
+
+
+
+            // resume normal code
             boolean isVanilla = msg == null;
             if (isVanilla)
             {
@@ -97,7 +142,9 @@ enum FMLHandshakeClientState implements IHandshakeState<FMLHandshakeClientState>
                 dispatcher.setOverrideDimension(serverHelloPacket.overrideDim());
             }
             ctx.writeAndFlush(new FMLHandshakeMessage.ClientHello()).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
-            ctx.writeAndFlush(new FMLHandshakeMessage.ModList(Loader.instance().getActiveModList())).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+            //ctx.writeAndFlush(new FMLHandshakeMessage.ModList(Loader.instance().getActiveModList())).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+            // grab the servers mod list and send it back
+            ctx.writeAndFlush(epicModList).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
         }
     },
 
