@@ -503,7 +503,7 @@ project(':cleanroom') {
         installer 'jakarta.activation:jakarta.activation-api:2.1.3'
         installer 'org.glassfish.corba:glassfish-corba-omgapi:4.2.5'
         installer 'org.openjdk.nashorn:nashorn-core:15.6'
-        // installer 'ca.weblite:java-objc-bridge:1.2'
+        installer 'ca.weblite:java-objc-bridge:1.2'
 
 
         // Mixin
