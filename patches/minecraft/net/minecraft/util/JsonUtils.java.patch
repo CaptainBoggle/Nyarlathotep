@@ -1,0 +1,12 @@
+--- before/net/minecraft/util/JsonUtils.java
++++ after/net/minecraft/util/JsonUtils.java
+@@ -346,7 +346,8 @@
+         try
+         {
+             JsonReader jsonreader = new JsonReader(p_188173_1_);
+-            jsonreader.setLenient(p_188173_3_);
++            //jsonreader.setLenient(lenient);
++            jsonreader.setLenient(true);
+             return p_188173_0_.getAdapter(p_188173_2_).read(jsonreader);
+         }
+         catch (IOException ioexception)
