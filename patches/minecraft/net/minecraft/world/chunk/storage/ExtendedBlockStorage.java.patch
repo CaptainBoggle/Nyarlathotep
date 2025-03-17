@@ -1,6 +1,6 @@
 --- before/net/minecraft/world/chunk/storage/ExtendedBlockStorage.java
 +++ after/net/minecraft/world/chunk/storage/ExtendedBlockStorage.java
-@@ -34,27 +34,29 @@
+@@ -34,27 +34,30 @@
  
      public void func_177484_a(int p_177484_1_, int p_177484_2_, int p_177484_3_, IBlockState p_177484_4_)
      {
@@ -8,7 +8,9 @@
 +            p_177484_4_ = ((net.minecraftforge.common.property.IExtendedBlockState) p_177484_4_).getClean();
          IBlockState iblockstate = this.func_177485_a(p_177484_1_, p_177484_2_, p_177484_3_);
          Block block = iblockstate.func_177230_c();
-         Block block1 = p_177484_4_.func_177230_c();
+-        Block block1 = p_177484_4_.func_177230_c();
++        //Block block1 = state.getBlock();
++        Block block1 = p_177484_4_ != null ? p_177484_4_.func_177230_c() : Blocks.field_185772_cY;
  
          if (block != Blocks.field_150350_a)
          {
@@ -34,7 +36,7 @@
              }
          }
  
-@@ -101,21 +103,21 @@
+@@ -101,21 +104,21 @@
          this.field_76682_b = 0;
          this.field_76683_c = 0;
  

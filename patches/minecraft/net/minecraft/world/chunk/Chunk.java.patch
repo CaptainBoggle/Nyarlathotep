@@ -224,9 +224,12 @@
      }
  
      public IBlockState func_177435_g(BlockPos p_177435_1_)
-@@ -529,6 +541,7 @@
+@@ -527,8 +539,9 @@
+         }
+         else
          {
-             Block block = p_177436_2_.func_177230_c();
+-            Block block = p_177436_2_.func_177230_c();
++            Block block = p_177436_2_ != null ? p_177436_2_.func_177230_c() : Blocks.field_185772_cY;
              Block block1 = iblockstate.func_177230_c();
 +            int k1 = iblockstate.getLightOpacity(this.field_76637_e, p_177436_1_); // Relocate old light value lookup here, so that it is called before TE is removed.
              ExtendedBlockStorage extendedblockstorage = this.field_76652_q[j >> 4];
