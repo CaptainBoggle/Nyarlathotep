@@ -58,7 +58,8 @@ import net.minecraftforge.fml.common.ModContainer;
 
 public class ForgeRegistry<V extends IForgeRegistryEntry<V>> implements IForgeRegistryInternal<V>, IForgeRegistryModifiable<V>
 {
-    public static final boolean DEBUG = Boolean.parseBoolean(System.getProperty("forge.debugRegistryEntries", "false"));
+    // FIXME: toggle this back to default false at some point
+    public static final boolean DEBUG = Boolean.parseBoolean(System.getProperty("forge.debugRegistryEntries", "true"));
     private final RegistryManager stage;
     private final BiMap<Integer, V> ids = HashBiMap.create();
     private final BiMap<ResourceLocation, V> names = HashBiMap.create();
@@ -648,6 +649,7 @@ public class ForgeRegistry<V extends IForgeRegistryEntry<V>> implements IForgeRe
 
             if (currId == -1)
             {
+                // TODO: register things here that are missing?
                 FMLLog.log.info("Registry {}: Found a missing id from the world {}", this.superType.getSimpleName(), itemName);
                 missing.put(itemName, newId);
                 continue; // no block/item -> nothing to add
