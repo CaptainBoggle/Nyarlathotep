@@ -742,7 +742,7 @@
      public void func_147273_a(SPacketUpdateTileEntity p_147273_1_)
      {
          PacketThreadUtil.func_180031_a(p_147273_1_, this, this.field_147299_f);
-@@ -1390,20 +1217,19 @@
+@@ -1390,20 +1217,20 @@
              int i = p_147273_1_.func_148853_f();
              boolean flag = i == 2 && tileentity instanceof TileEntityCommandBlock;
  
@@ -765,6 +765,7 @@
 +            {
 +                if(tileentity == null)
 +                {
++                    // even just being able to interact with tile entities to see a log of their updates would provide a lot of detail...
 +                    field_147301_d.error("Received invalid update packet for null tile entity at {} with data: {}", p_147273_1_.func_179823_a(), p_147273_1_.func_148857_g());
 +                    return;
 +                }
@@ -773,7 +774,7 @@
  
              if (flag && this.field_147299_f.field_71462_r instanceof GuiCommandBlock)
              {
-@@ -1412,7 +1238,6 @@
+@@ -1412,7 +1239,6 @@
          }
      }
  
@@ -781,7 +782,7 @@
      public void func_147245_a(SPacketWindowProperty p_147245_1_)
      {
          PacketThreadUtil.func_180031_a(p_147245_1_, this, this.field_147299_f);
-@@ -1424,7 +1249,6 @@
+@@ -1424,7 +1250,6 @@
          }
      }
  
@@ -789,7 +790,7 @@
      public void func_147242_a(SPacketEntityEquipment p_147242_1_)
      {
          PacketThreadUtil.func_180031_a(p_147242_1_, this, this.field_147299_f);
-@@ -1436,30 +1260,24 @@
+@@ -1436,30 +1261,24 @@
          }
      }
  
@@ -821,7 +822,7 @@
      public void func_147252_a(SPacketChangeGameState p_147252_1_)
      {
          PacketThreadUtil.func_180031_a(p_147252_1_, this, this.field_147299_f);
-@@ -1470,7 +1288,7 @@
+@@ -1470,7 +1289,7 @@
  
          if (i >= 0 && i < SPacketChangeGameState.field_149142_a.length && SPacketChangeGameState.field_149142_a[i] != null)
          {
@@ -830,7 +831,7 @@
          }
  
          if (i == 1)
-@@ -1496,13 +1314,10 @@
+@@ -1496,13 +1315,10 @@
              }
              else if (j == 1)
              {
@@ -848,7 +849,7 @@
              }
          }
          else if (i == 5)
-@@ -1515,47 +1330,20 @@
+@@ -1515,47 +1331,20 @@
              }
              else if (f == 101.0F)
              {
@@ -900,7 +901,7 @@
          }
          else if (i == 7)
          {
-@@ -1567,25 +1355,11 @@
+@@ -1567,25 +1356,11 @@
          }
          else if (i == 10)
          {
@@ -928,7 +929,7 @@
      public void func_147264_a(SPacketMaps p_147264_1_)
      {
          PacketThreadUtil.func_180031_a(p_147264_1_, this, this.field_147299_f);
-@@ -1614,7 +1388,6 @@
+@@ -1614,7 +1389,6 @@
          mapitemrenderer.func_148246_a(mapdata);
      }
  
@@ -936,7 +937,7 @@
      public void func_147277_a(SPacketEffect p_147277_1_)
      {
          PacketThreadUtil.func_180031_a(p_147277_1_, this, this.field_147299_f);
-@@ -1629,14 +1402,12 @@
+@@ -1629,14 +1403,12 @@
          }
      }
  
@@ -951,7 +952,7 @@
      public void func_194022_a(SPacketSelectAdvancementsTab p_194022_1_)
      {
          PacketThreadUtil.func_180031_a(p_194022_1_, this, this.field_147299_f);
-@@ -1644,7 +1415,7 @@
+@@ -1644,7 +1416,7 @@
  
          if (resourcelocation == null)
          {
@@ -960,7 +961,7 @@
          }
          else
          {
-@@ -1653,7 +1424,6 @@
+@@ -1653,7 +1425,6 @@
          }
      }
  
@@ -968,7 +969,7 @@
      public void func_147293_a(SPacketStatistics p_147293_1_)
      {
          PacketThreadUtil.func_180031_a(p_147293_1_, this, this.field_147299_f);
-@@ -1661,8 +1431,8 @@
+@@ -1661,8 +1432,8 @@
          for (Entry<StatBase, Integer> entry : p_147293_1_.func_148974_c().entrySet())
          {
              StatBase statbase = entry.getKey();
@@ -979,7 +980,7 @@
          }
  
          this.field_147308_k = true;
-@@ -1673,31 +1443,38 @@
+@@ -1673,31 +1444,38 @@
          }
      }
  
@@ -1023,7 +1024,7 @@
                  {
                      recipebook.func_194073_a(p_194025_2_);
                      recipebook.func_193825_e(p_194025_2_);
-@@ -1705,7 +1482,10 @@
+@@ -1705,7 +1483,10 @@
                  });
          }
  
@@ -1035,7 +1036,7 @@
  
          if (this.field_147299_f.field_71462_r instanceof IRecipeShownListener)
          {
-@@ -1713,7 +1493,6 @@
+@@ -1713,7 +1494,6 @@
          }
      }
  
@@ -1043,7 +1044,7 @@
      public void func_147260_a(SPacketEntityEffect p_147260_1_)
      {
          PacketThreadUtil.func_180031_a(p_147260_1_, this, this.field_147299_f);
-@@ -1721,20 +1500,17 @@
+@@ -1721,20 +1501,17 @@
  
          if (entity instanceof EntityLivingBase)
          {
@@ -1066,7 +1067,7 @@
      public void func_175098_a(SPacketCombatEvent p_175098_1_)
      {
          PacketThreadUtil.func_180031_a(p_175098_1_, this, this.field_147299_f);
-@@ -1750,7 +1526,6 @@
+@@ -1750,7 +1527,6 @@
          }
      }
  
@@ -1074,7 +1075,7 @@
      public void func_175101_a(SPacketServerDifficulty p_175101_1_)
      {
          PacketThreadUtil.func_180031_a(p_175101_1_, this, this.field_147299_f);
-@@ -1758,7 +1533,6 @@
+@@ -1758,7 +1534,6 @@
          this.field_147299_f.field_71441_e.func_72912_H().func_180783_e(p_175101_1_.func_179830_a());
      }
  
@@ -1082,7 +1083,7 @@
      public void func_175094_a(SPacketCamera p_175094_1_)
      {
          PacketThreadUtil.func_180031_a(p_175094_1_, this, this.field_147299_f);
-@@ -1770,7 +1544,6 @@
+@@ -1770,7 +1545,6 @@
          }
      }
  
@@ -1090,7 +1091,7 @@
      public void func_175093_a(SPacketWorldBorder p_175093_1_)
      {
          PacketThreadUtil.func_180031_a(p_175093_1_, this, this.field_147299_f);
-@@ -1778,7 +1551,6 @@
+@@ -1778,7 +1552,6 @@
      }
  
      @SuppressWarnings("incomplete-switch")
@@ -1098,7 +1099,7 @@
      public void func_175099_a(SPacketTitle p_175099_1_)
      {
          PacketThreadUtil.func_180031_a(p_175099_1_, this, this.field_147299_f);
-@@ -1807,20 +1579,12 @@
+@@ -1807,20 +1580,12 @@
          this.field_147299_f.field_71456_v.func_175178_a(s, s1, p_175099_1_.func_179806_c(), p_175099_1_.func_179804_d(), p_175099_1_.func_179803_e());
      }
  
@@ -1121,7 +1122,7 @@
      public void func_147262_a(SPacketRemoveEntityEffect p_147262_1_)
      {
          PacketThreadUtil.func_180031_a(p_147262_1_, this, this.field_147299_f);
-@@ -1833,7 +1597,6 @@
+@@ -1833,7 +1598,6 @@
      }
  
      @SuppressWarnings("incomplete-switch")
@@ -1129,7 +1130,7 @@
      public void func_147256_a(SPacketPlayerListItem p_147256_1_)
      {
          PacketThreadUtil.func_180031_a(p_147256_1_, this, this.field_147299_f);
-@@ -1876,26 +1639,23 @@
+@@ -1876,26 +1640,23 @@
          }
      }
  
@@ -1163,7 +1164,7 @@
      public void func_147274_a(SPacketTabComplete p_147274_1_)
      {
          PacketThreadUtil.func_180031_a(p_147274_1_, this, this.field_147299_f);
-@@ -1908,47 +1668,18 @@
+@@ -1908,47 +1669,18 @@
          }
      }
  
@@ -1213,7 +1214,7 @@
      public void func_175095_a(SPacketResourcePackSend p_175095_1_)
      {
          final String s = p_175095_1_.func_179783_a();
-@@ -1967,12 +1698,13 @@
+@@ -1967,12 +1699,13 @@
                      if (file2.isFile())
                      {
                          this.field_147302_e.func_179290_a(new CPacketResourcePackStatus(CPacketResourcePackStatus.Action.ACCEPTED));
@@ -1229,7 +1230,7 @@
                  }
  
                  this.field_147302_e.func_179290_a(new CPacketResourcePackStatus(CPacketResourcePackStatus.Action.FAILED_DOWNLOAD));
-@@ -1984,7 +1716,7 @@
+@@ -1984,7 +1717,7 @@
                  if (serverdata != null && serverdata.func_152586_b() == ServerData.ServerResourceMode.ENABLED)
                  {
                      this.field_147302_e.func_179290_a(new CPacketResourcePackStatus(CPacketResourcePackStatus.Action.ACCEPTED));
@@ -1238,7 +1239,7 @@
                  }
                  else if (serverdata != null && serverdata.func_152586_b() != ServerData.ServerResourceMode.PROMPT)
                  {
-@@ -1992,19 +1724,12 @@
+@@ -1992,19 +1725,12 @@
                  }
                  else
                  {
@@ -1260,7 +1261,7 @@
                                  public void func_73878_a(boolean p_73878_1_, int p_73878_2_)
                                  {
                                      NetHandlerPlayClient.this.field_147299_f = Minecraft.func_71410_x();
-@@ -2017,12 +1742,8 @@
+@@ -2017,12 +1743,8 @@
                                              serverdata1.func_152584_a(ServerData.ServerResourceMode.ENABLED);
                                          }
  
@@ -1275,7 +1276,7 @@
                                      }
                                      else
                                      {
-@@ -2031,22 +1752,15 @@
+@@ -2031,22 +1753,15 @@
                                              serverdata1.func_152584_a(ServerData.ServerResourceMode.DISABLED);
                                          }
  
@@ -1302,7 +1303,7 @@
                  }
              }
          }
-@@ -2073,7 +1787,7 @@
+@@ -2073,7 +1788,7 @@
                  throw new URISyntaxException(p_189688_1_, "Invalid levelstorage resourcepack path");
              }
          }
@@ -1311,7 +1312,7 @@
          {
              this.field_147302_e.func_179290_a(new CPacketResourcePackStatus(CPacketResourcePackStatus.Action.FAILED_DOWNLOAD));
              return false;
-@@ -2084,12 +1798,10 @@
+@@ -2084,12 +1799,10 @@
      {
          return new FutureCallback<Object>()
          {
@@ -1324,7 +1325,7 @@
              public void onFailure(Throwable p_onFailure_1_)
              {
                  NetHandlerPlayClient.this.field_147302_e.func_179290_a(new CPacketResourcePackStatus(CPacketResourcePackStatus.Action.FAILED_DOWNLOAD));
-@@ -2097,14 +1809,12 @@
+@@ -2097,14 +1810,12 @@
          };
      }
  
@@ -1339,7 +1340,7 @@
      public void func_184324_a(SPacketCooldown p_184324_1_)
      {
          PacketThreadUtil.func_180031_a(p_184324_1_, this, this.field_147299_f);
-@@ -2119,7 +1829,6 @@
+@@ -2119,7 +1830,6 @@
          }
      }
  
@@ -1347,7 +1348,7 @@
      public void func_184323_a(SPacketMoveVehicle p_184323_1_)
      {
          PacketThreadUtil.func_180031_a(p_184323_1_, this, this.field_147299_f);
-@@ -2127,14 +1836,11 @@
+@@ -2127,14 +1837,11 @@
  
          if (entity != this.field_147299_f.field_71439_g && entity.func_184186_bw())
          {
@@ -1363,7 +1364,7 @@
      public void func_147240_a(SPacketCustomPayload p_147240_1_)
      {
          PacketThreadUtil.func_180031_a(p_147240_1_, this, this.field_147299_f);
-@@ -2145,10 +1851,10 @@
+@@ -2145,10 +1852,10 @@
  
              try
              {
@@ -1376,7 +1377,7 @@
                  {
                      IMerchant imerchant = ((GuiMerchant)guiscreen).func_147035_g();
                      MerchantRecipeList merchantrecipelist = MerchantRecipeList.func_151390_b(packetbuffer);
-@@ -2161,6 +1867,7 @@
+@@ -2161,6 +1868,7 @@
              }
              finally
              {
@@ -1384,7 +1385,7 @@
                  packetbuffer.release();
              }
          }
-@@ -2170,10 +1877,8 @@
+@@ -2170,10 +1878,8 @@
          }
          else if ("MC|BOpen".equals(p_147240_1_.func_149169_c()))
          {
@@ -1397,7 +1398,7 @@
  
              if (itemstack.func_77973_b() == Items.field_151164_bB)
              {
-@@ -2183,17 +1888,17 @@
+@@ -2183,17 +1889,17 @@
          else if ("MC|DebugPath".equals(p_147240_1_.func_149169_c()))
          {
              PacketBuffer packetbuffer1 = p_147240_1_.func_180735_b();
@@ -1420,7 +1421,7 @@
          }
          else if ("MC|StopSound".equals(p_147240_1_.func_149169_c()))
          {
-@@ -2204,7 +1909,6 @@
+@@ -2204,7 +1910,6 @@
          }
      }
  
@@ -1428,7 +1429,7 @@
      public void func_147291_a(SPacketScoreboardObjective p_147291_1_)
      {
          PacketThreadUtil.func_180031_a(p_147291_1_, this, this.field_147299_f);
-@@ -2232,7 +1936,6 @@
+@@ -2232,7 +1937,6 @@
          }
      }
  
@@ -1436,7 +1437,7 @@
      public void func_147250_a(SPacketUpdateScore p_147250_1_)
      {
          PacketThreadUtil.func_180031_a(p_147250_1_, this, this.field_147299_f);
-@@ -2248,7 +1951,7 @@
+@@ -2248,7 +1952,7 @@
          {
              if (StringUtils.func_151246_b(p_147250_1_.func_149321_d()))
              {
@@ -1445,7 +1446,7 @@
              }
              else if (scoreobjective != null)
              {
-@@ -2257,7 +1960,6 @@
+@@ -2257,7 +1961,6 @@
          }
      }
  
@@ -1453,7 +1454,7 @@
      public void func_147254_a(SPacketDisplayObjective p_147254_1_)
      {
          PacketThreadUtil.func_180031_a(p_147254_1_, this, this.field_147299_f);
-@@ -2265,7 +1967,7 @@
+@@ -2265,7 +1968,7 @@
  
          if (p_147254_1_.func_149370_d().isEmpty())
          {
@@ -1462,7 +1463,7 @@
          }
          else
          {
-@@ -2274,7 +1976,6 @@
+@@ -2274,7 +1977,6 @@
          }
      }
  
@@ -1470,7 +1471,7 @@
      public void func_147247_a(SPacketTeams p_147247_1_)
      {
          PacketThreadUtil.func_180031_a(p_147247_1_, this, this.field_147299_f);
-@@ -2334,7 +2035,6 @@
+@@ -2334,7 +2036,6 @@
          }
      }
  
@@ -1478,7 +1479,7 @@
      public void func_147289_a(SPacketParticles p_147289_1_)
      {
          PacketThreadUtil.func_180031_a(p_147289_1_, this, this.field_147299_f);
-@@ -2347,27 +2047,16 @@
+@@ -2347,27 +2048,16 @@
  
              try
              {
@@ -1510,7 +1511,7 @@
              {
                  double d1 = this.field_147306_l.nextGaussian() * (double)p_147289_1_.func_149221_g();
                  double d3 = this.field_147306_l.nextGaussian() * (double)p_147289_1_.func_149224_h();
-@@ -2378,29 +2067,17 @@
+@@ -2378,29 +2068,17 @@
  
                  try
                  {
@@ -1543,7 +1544,7 @@
      public void func_147290_a(SPacketEntityProperties p_147290_1_)
      {
          PacketThreadUtil.func_180031_a(p_147290_1_, this, this.field_147299_f);
-@@ -2422,9 +2099,7 @@
+@@ -2422,9 +2100,7 @@
  
                      if (iattributeinstance == null)
                      {
@@ -1554,7 +1555,7 @@
                      }
  
                      iattributeinstance.func_111128_a(spacketentityproperties$snapshot.func_151410_b());
-@@ -2439,7 +2114,6 @@
+@@ -2439,7 +2115,6 @@
          }
      }
  

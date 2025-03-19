@@ -35,6 +35,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
+import com.cleanroommc.common.NyarLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
@@ -774,8 +775,12 @@ public class FMLClientHandler implements IFMLSidedHandler
             JsonObject jsonData = extraServerListData.get(originalResponse);
             String type = jsonData.get("type").getAsString();
             JsonArray modDataArray = jsonData.get("modList").getAsJsonArray();
-            //boolean moddedClientAllowed = jsonData.has("clientModsAllowed") ? jsonData.get("clientModsAllowed").getAsBoolean() : true;
-            boolean moddedClientAllowed = true; // we don't care if the server doesn't want us to have mods
+            boolean moddedClientAllowed = !jsonData.has("clientModsAllowed") || jsonData.get("clientModsAllowed").getAsBoolean();
+            if (!moddedClientAllowed) {
+                // don't care what the server wants
+                NyarLog.info("Server {}/{} tried to disallow modded clients (ignored)", data.serverName, data.serverIP);
+                moddedClientAllowed = true;
+            }
             Builder<String, String> modListBldr = ImmutableMap.builder();
             for (JsonElement obj : modDataArray)
             {
@@ -791,11 +796,11 @@ public class FMLClientHandler implements IFMLSidedHandler
         {
             String serverDescription = data.serverMOTD;
             boolean moddedClientAllowed = true;
-//            if (!Strings.isNullOrEmpty(serverDescription))
-//            {
-//                moddedClientAllowed = !serverDescription.endsWith(":NOFML§r");
-//            }
-            // again, we don't care if the server doesn't want us to have mods
+            if (!Strings.isNullOrEmpty(serverDescription) && serverDescription.endsWith(":NOFML§r"))
+            {
+                // again, we don't care if the server doesn't want us to have mods
+                NyarLog.info("Server {}/{} actually used the NOFML feature! (too bad, ignored)");
+            }
             serverDataTag.put(data, new ExtendedServerListData("VANILLA", false, ImmutableMap.of(), !moddedClientAllowed));
         }
         startupConnectionData.countDown();

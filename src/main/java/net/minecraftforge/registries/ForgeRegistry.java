@@ -32,6 +32,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.cleanroommc.common.NyarLog;
 import org.apache.commons.lang3.Validate;
 
 import com.google.common.base.Preconditions;
@@ -704,8 +705,12 @@ public class ForgeRegistry<V extends IForgeRegistryEntry<V>> implements IForgeRe
         {
             ResourceLocation itemName = entry.getKey();
             String owner = entry.getValue();
-            // String current = this.owners.inverse().get(this.getRaw(itemName)).owner;
             String current = "minecraft";
+            try {
+                current = this.owners.inverse().get(this.getRaw(itemName)).owner;
+            } catch (Exception e) {
+                NyarLog.jank(e);
+            }
             if (!owner.equals(current))
             {
                 V _new = this.owners.get(new OverrideOwner(owner, itemName));

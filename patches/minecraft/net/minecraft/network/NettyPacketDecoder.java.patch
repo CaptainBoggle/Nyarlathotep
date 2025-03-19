@@ -1,6 +1,13 @@
 --- before/net/minecraft/network/NettyPacketDecoder.java
 +++ after/net/minecraft/network/NettyPacketDecoder.java
-@@ -22,49 +22,44 @@
+@@ -1,5 +1,6 @@
+ package net.minecraft.network;
+ 
++import com.cleanroommc.common.NyarLog;
+ import io.netty.buffer.ByteBuf;
+ import io.netty.channel.ChannelHandlerContext;
+ import io.netty.handler.codec.ByteToMessageDecoder;
+@@ -22,49 +23,46 @@
      }
  
      @Override
@@ -51,12 +58,14 @@
 +                Packet<?> packet = p_decode_1_.channel().attr(NetworkManager.field_150739_c).get().func_179244_a(this.field_152499_c, i);
 +
 +                if (packet == null) {
-+                    throw new IOException("Bad packet id " + i);
++                    // throw new IOException("Bad packet id " + i);
++                    NyarLog.debug("Dropping packet with bad id {}", i);
 +                } else {
 +                    packet.func_148837_a(packetbuffer);
 +
 +                    if (packetbuffer.readableBytes() > 0) {
-+                        throw new IOException(
++                        //throw new IOException(
++                        NyarLog.debug(
 +                                "Packet "
 +                                        + p_decode_1_.channel().attr(NetworkManager.field_150739_c).get().func_150759_c()
 +                                        + "/"
@@ -80,7 +89,7 @@
                  }
              }
 +        } catch (Exception e) {
-+            field_150800_a.error(e);
++            NyarLog.jank(e);
          }
      }
  }

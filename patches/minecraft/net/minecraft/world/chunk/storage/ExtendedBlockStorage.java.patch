@@ -1,6 +1,13 @@
 --- before/net/minecraft/world/chunk/storage/ExtendedBlockStorage.java
 +++ after/net/minecraft/world/chunk/storage/ExtendedBlockStorage.java
-@@ -34,27 +34,30 @@
+@@ -1,5 +1,6 @@
+ package net.minecraft.world.chunk.storage;
+ 
++import com.cleanroommc.common.NyarLog;
+ import net.minecraft.block.Block;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.init.Blocks;
+@@ -34,27 +35,38 @@
  
      public void func_177484_a(int p_177484_1_, int p_177484_2_, int p_177484_3_, IBlockState p_177484_4_)
      {
@@ -10,7 +17,15 @@
          Block block = iblockstate.func_177230_c();
 -        Block block1 = p_177484_4_.func_177230_c();
 +        //Block block1 = state.getBlock();
-+        Block block1 = p_177484_4_ != null ? p_177484_4_.func_177230_c() : Blocks.field_185772_cY;
++        Block block1;
++        if (p_177484_4_ == null) {
++            block1 = Blocks.field_150346_d;
++            // TODO: this sucks!
++            NyarLog.jank("Tried to set storage block state to null, pretending the block is dirt for now...");
++        }
++        else {
++            block1 = p_177484_4_.func_177230_c();
++        }
  
          if (block != Blocks.field_150350_a)
          {
@@ -36,7 +51,7 @@
              }
          }
  
-@@ -101,21 +104,21 @@
+@@ -101,21 +113,21 @@
          this.field_76682_b = 0;
          this.field_76683_c = 0;
  

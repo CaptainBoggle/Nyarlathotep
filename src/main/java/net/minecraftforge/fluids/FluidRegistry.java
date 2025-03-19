@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.cleanroommc.common.NyarLog;
 import net.minecraftforge.fml.common.LoaderState;
 
 import net.minecraft.block.Block;
@@ -126,9 +127,11 @@ public abstract class FluidRegistry
 //                    continue;
                     // Everything is water!
                     localDefault = "minecraft:water";
+                    NyarLog.jank("Trying (barely) to replace missing fluid {} with {}", defaultName, localDefault);
+                } else {
+                    FMLLog.log.error("The fluid {} specified as default is not present - it will be reverted to default {}", defaultName, localDefault);
                 }
                 fluid = masterFluidReference.get(localDefault);
-                FMLLog.log.error("The fluid {} specified as default is not present - it will be reverted to default {}", defaultName, localDefault);
             }
             FMLLog.log.debug("The fluid {} has been selected as the default fluid for {}", defaultName, fluid.getName());
             Fluid oldFluid = localFluids.put(fluid.getName(), fluid);
@@ -137,7 +140,15 @@ public abstract class FluidRegistry
         }
         BiMap<Integer, String> localFluidNames = HashBiMap.create();
         for (Entry<Fluid, Integer> e : localFluidIDs.entrySet()) {
-            localFluidNames.put(e.getValue(), e.getKey() != null ? e.getKey().getName() : "water2");
+            Fluid f = e.getKey();
+            Integer id = e.getValue();
+            if (f != null) {
+                localFluidNames.put(id, f.getName());
+            }
+            else {
+                NyarLog.jank("Fluid id {} has no name, calling it `water2`", id);
+                localFluidNames.put(id, "water2");
+            }
         }
         fluidIDs = localFluidIDs;
         fluids = localFluids;

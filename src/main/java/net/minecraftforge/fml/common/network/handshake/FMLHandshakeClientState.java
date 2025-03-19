@@ -19,6 +19,7 @@
 
 package net.minecraftforge.fml.common.network.handshake;
 
+import com.cleanroommc.common.NyarLog;
 import com.google.common.graph.Network;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -100,12 +101,13 @@ enum FMLHandshakeClientState implements IHandshakeState<FMLHandshakeClientState>
             Map<ServerData, ExtendedServerListData> serverListData = client.serverDataTag;
 
             // Yes, this falls apart if we have multiple servers with the same IP, but that's a problem for another day
+            // TODO: fix that somehow
             for (Map.Entry<ServerData, ExtendedServerListData> entry : serverListData.entrySet())
             {
                 if (entry.getKey().serverIP.equals(serverIP))
                 {
                     epicModList = new FMLHandshakeMessage.ModList(entry.getValue().modData);
-                    FMLLog.log.info("Spoofing mod list!");
+                    NyarLog.info("Found mod list for server {}/{}", entry.getKey().serverName, entry.getKey().serverIP);
                     break;
                 }
             }
@@ -144,6 +146,7 @@ enum FMLHandshakeClientState implements IHandshakeState<FMLHandshakeClientState>
             ctx.writeAndFlush(new FMLHandshakeMessage.ClientHello()).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
             //ctx.writeAndFlush(new FMLHandshakeMessage.ModList(Loader.instance().getActiveModList())).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
             // grab the servers mod list and send it back
+            NyarLog.info("Joining with spoofed mod list");
             ctx.writeAndFlush(epicModList).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
         }
     },
@@ -204,15 +207,16 @@ enum FMLHandshakeClientState implements IHandshakeState<FMLHandshakeClientState>
             //Do the remapping on the Client's thread in case things are reset while the client is running. We stall the network thread until this is finished which can cause the IO thread to time out... Not sure if we can do anything about that.
             final Map<ResourceLocation, ForgeRegistry.Snapshot> snap_f = snap;
             Multimap<ResourceLocation, ResourceLocation> locallyMissing = Futures.getUnchecked(Minecraft.getMinecraft().addScheduledTask(() -> GameData.injectSnapshot(snap_f, false, false)));
-//            if (!locallyMissing.isEmpty())
-//            {
+            if (!locallyMissing.isEmpty())
+            {
 //                cons.accept(ERROR);
 //                NetworkDispatcher dispatcher = ctx.channel().attr(NetworkDispatcher.FML_DISPATCHER).get();
 //                dispatcher.rejectHandshake("Fatally missing registry entries");
 //                FMLLog.log.fatal("Failed to connect to server: there are {} missing registry items", locallyMissing.size());
 //                locallyMissing.asMap().forEach((key, value) ->  FMLLog.log.debug("Missing {} Entries: {}", key, value));
 //                return;
-//            }
+                NyarLog.jank("Joining server despite {} missing registry items", locallyMissing.size());
+            }
             cons.accept(PENDINGCOMPLETE);
             ctx.writeAndFlush(new FMLHandshakeMessage.HandshakeAck(ordinal())).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
         }

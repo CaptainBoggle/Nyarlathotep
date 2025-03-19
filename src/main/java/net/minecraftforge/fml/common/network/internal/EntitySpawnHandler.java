@@ -19,6 +19,7 @@
 
 package net.minecraftforge.fml.common.network.internal;
 
+import com.cleanroommc.common.NyarLog;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -77,7 +78,9 @@ public class EntitySpawnHandler extends SimpleChannelInboundHandler<EntityMessag
         {
 //            throw new RuntimeException( "Could not spawn mod entity ModID: " + spawnMsg.modId + " EntityID: " + spawnMsg.modEntityTypeId +
 //                    " at ( " + spawnMsg.rawX + "," + spawnMsg.rawY + ", " + spawnMsg.rawZ + ") Please contact mod author or server admin.");
-            ee = GameData.getEntityClassMap().values().stream().filter(e -> e.getName().equals("Egg")).findAny().orElseThrow();
+            NyarLog.jank("Tried to spawn unregistered entity {} from {} - attempting to replace with a pig", spawnMsg.modEntityTypeId, spawnMsg.modId);
+            // this actually at least partially works right now - I have been killed by a very fast, aggressive, aquatic pig.
+            ee = GameData.getEntityClassMap().values().stream().filter(e -> e.getName().equals("Pig")).findAny().orElseThrow();
         }
         WorldClient wc = FMLClientHandler.instance().getWorldClient();
         try
@@ -137,6 +140,7 @@ public class EntitySpawnHandler extends SimpleChannelInboundHandler<EntityMessag
         catch (Exception e)
         {
             //throw new RuntimeException("A severe problem occurred during the spawning of an entity at (" + spawnMsg.rawX + ", " + spawnMsg.rawY + ", " + spawnMsg.rawZ + ")", e);
+            NyarLog.jank("Caught error while trying to manipulate the pig! trying to just spawn a raw pig instead.", e);
             Entity entity = er.newInstance(wc);
             wc.addEntityToWorld(spawnMsg.entityId, entity);
         }
