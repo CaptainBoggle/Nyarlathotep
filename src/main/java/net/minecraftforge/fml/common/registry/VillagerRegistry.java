@@ -19,10 +19,9 @@
 
 package net.minecraftforge.fml.common.registry;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+
+import com.cleanroommc.common.NyarLog;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.entity.monster.EntityZombieVillager;
@@ -274,8 +273,7 @@ public class VillagerRegistry
                 levelTrades = Lists.newArrayList();
                 this.trades.set(level - 1, levelTrades);
             }
-            for (ITradeList t : trades)
-                levelTrades.add(t);
+            levelTrades.addAll(Arrays.asList(trades));
             return this;
         }
 
@@ -298,11 +296,10 @@ public class VillagerRegistry
             {
                 return true;
             }
-            if (!(o instanceof VillagerCareer))
+            if (!(o instanceof VillagerCareer oc))
             {
                 return false;
             }
-            VillagerCareer oc = (VillagerCareer)o;
             return name.equals(oc.name) && profession == oc.profession;
         }
     }
@@ -329,7 +326,9 @@ public class VillagerRegistry
         VillagerProfession prof = INSTANCE.REGISTRY.getObjectById(network);
         if (prof == null || INSTANCE.REGISTRY.getIDForObject(prof) != network)
         {
-            throw new RuntimeException("Attempted to set villager profession to unregistered profession: " + network + " " + prof);
+            NyarLog.jank("Caught villager prof error, setting to nitwit", new RuntimeException("Attempted to set villager profession to unregistered profession: " + network + " " + prof));
+            prof = INSTANCE.REGISTRY.getObjectById(5);
+            // in the future we could maybe do a bit better than this?
         }
 
         if (prof != entity.getProfessionForge())
@@ -341,7 +340,9 @@ public class VillagerRegistry
         VillagerProfession prof = INSTANCE.REGISTRY.getObjectById(network);
         if (prof == null && network != -1 || INSTANCE.REGISTRY.getIDForObject(prof) != network)
         {
-            throw new RuntimeException("Attempted to set villager profession to unregistered profession: " + network + " " + prof);
+            NyarLog.jank("Caught villager prof error, setting to nitwit", new RuntimeException("Attempted to set villager profession to unregistered profession: " + network + " " + prof));
+            prof = INSTANCE.REGISTRY.getObjectById(5);
+            // in the future we could maybe do a bit better than this?
         }
 
         if (prof != entity.getForgeProfession())
