@@ -19,6 +19,7 @@
 - Run `gradlew genPatches` before commit, or the changes won't exist
 - Modifications on `src/` doesn't need generating patches
 - Install the [ReAuth](https://www.curseforge.com/minecraft/mc-mods/reauth) mod to make it easy to login while debugging
+- Use this [Shodan query](https://www.shodan.io/search?query=1.12.2+%28Protocol+340%29+country%3Aau) to find servers to test on
 
 ## Acknowledgements
 Huge thanks to the [CleanroomMC](https://github.com/CleanroomMC/Cleanroom) project, as without their work as a base this would be far more painful.
